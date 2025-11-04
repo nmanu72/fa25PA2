@@ -18,6 +18,7 @@ struct MinHeap {
         // Increase size, insert idx to end index
         size++;
         data[size-1] = idx;
+        // Call upheap function.
         upheap(size-1, weightArr);
     }
 
@@ -28,11 +29,11 @@ struct MinHeap {
             data[0] = data[size-1];
             // Decrement size of array
             size--;
-            // Call downheap
+            // Call downheap function.
             downheap(0, weightArr);
             return popElement;
         }
-        // Replace root with last element, then call downheap()
+        // Replace root with last element, then call downheap().
         return -1; // placeholder
     }
 
