@@ -106,7 +106,7 @@ int buildEncodingTree(int nextFree) {
         // Combining two popped values and adding them back to WeightArr
         weightArr[index] = weightArr[node1]+weightArr[node2];
 
-        // Assigning smaller value to left and larger to right.
+        // Assigning smaller value to left child and larger to right child.
         // We know node1 is smaller since it was popped from min heap before node2.
         leftArr[index] = node1;
         rightArr[index] = node2;
@@ -123,28 +123,33 @@ int buildEncodingTree(int nextFree) {
 
 // Step 4: Use an STL stack to generate codes
 void generateCodes(int root, string codes[]) {
-    // TODO:
     // Use stack<pair<int, string>> to simulate DFS traversal.
     // Left edge adds '0', right edge adds '1'.
     // Record code when a leaf node is reached.
-    stack<pair<int, string>> Codes;
-    Codes.push({root, " "});
-    int index = root;
-    while (!Codes.empty()) {
-        // If no child nodes exist.
+    stack<pair<int, string>> codeStack;
+    // Initial push (root)
+    codeStack.push({root, ""});
+    while (!codeStack.empty()) {
+        // Update the index and the currentCode by saving data from past nodes then popping
+        pair<int, string> topStack = codeStack.top();
+        int index = topStack.first;
+        string currCode = topStack.second;
+        codeStack.pop();
+
+        // If no child nodes exist (leaf).
         if (leftArr[index] == -1) {
-            Codes.push({index, "0"});
+            // Takes char at index, subtracts by 'a' to convert ASCII number
+            // into valid array index (0-25) for codes.
+            codes[charArr[index]-'a'] = currCode;
         }
-        // Else if no right child exists.
-        else if (rightArr[index] = -1) {
-            Codes.push({index, "1"});
-        }
-        // If children exist.
+        // If children exist push child indices into stack, add respective code
+        // (0 or 1 depending on right or left path) to currCode.
         else {
-            Codes.push({index, ""});
-            Codes.push({index, ""});
+            if (rightArr[index] != -1) {
+                codeStack.push({rightArr[index], currCode + "1"});
+            }
+            codeStack.push({leftArr[index], currCode + "0"});
         }
-        index++;
     }
 }
 
