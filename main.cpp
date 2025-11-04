@@ -106,10 +106,21 @@ int buildEncodingTree(int nextFree) {
         // Combining two popped values and adding them back to WeightArr
         weightArr[index] = weightArr[node1]+weightArr[node2];
 
-        // Assigning smaller value to left child and larger to right child.
-        // We know node1 is smaller since it was popped from min heap before node2.
-        leftArr[index] = node1;
-        rightArr[index] = node2;
+        // Adding predictability to the tree by setting up so equal weights
+        // are compared by indices.
+        if (weightArr[node1] == weightArr[node2]) {
+            int smallerIndex = node1 < node2 ? node1 : node2;
+            int largerIndex = node1 > node2 ? node1 : node2;
+            leftArr[index] = smallerIndex;
+            rightArr[index] = largerIndex;
+        }
+        else {
+            // Assigning smaller value to left child and larger to right child.
+            // We know node1 is smaller since it was popped from min heap before node2,
+            // and they are not equal due to pre checked condition above.
+            leftArr[index] = node1;
+            rightArr[index] = node2;
+        }
 
         // Pushing index of combined value into heap.
         heap.push(index, weightArr);
